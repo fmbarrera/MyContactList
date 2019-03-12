@@ -111,7 +111,7 @@ public class ContactMapActivity extends AppCompatActivity implements OnMapReadyC
         initListButton();
         initSettingsButton();
         //initMapButton();
-        //initMapTypeButton();
+        initMapTypeButton();
         ImageButton ibMap = (ImageButton) findViewById(R.id.imageButtonMap);
         ibMap.setEnabled(false);
 
