@@ -13,20 +13,17 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +32,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -49,14 +45,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactMapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, com.google.android.gms.location.LocationListener {
+public class ContactMapActivity extends AppCompatActivity implements OnMapReadyCallback,
+        GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks,
+        com.google.android.gms.location.LocationListener {
 
     final int PERMISSION_REQUEST_LOCATION = 101;
     GoogleMap gMap;
     GoogleApiClient mGoogleApiClient;
     LocationRequest mLocationRequest;
-    ArrayList<Contact> contacts = new ArrayList<>();
-    Contact currentContact = null;
+
+    ArrayList<Contact> contacts = new ArrayList<>();  //might delete check back to 7.11
+    Contact currentContact = null;  //this is not on 7.11
 
     SensorManager sensorManager;
     Sensor accelerometer;
@@ -67,6 +66,7 @@ public class ContactMapActivity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_map);
+
 
         Bundle extras = getIntent().getExtras();
         try {
@@ -83,9 +83,9 @@ public class ContactMapActivity extends AppCompatActivity implements OnMapReadyC
             Toast.makeText(this, "Contact(s) could not be retrieved.", Toast.LENGTH_LONG).show();
         }
 
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         createLocationRequest();
 
         if (mGoogleApiClient == null) {
@@ -114,7 +114,7 @@ public class ContactMapActivity extends AppCompatActivity implements OnMapReadyC
         //initMapTypeButton();
         ImageButton ibMap = (ImageButton) findViewById(R.id.imageButtonMap);
         ibMap.setEnabled(false);
-        initGetLocationButton();
+
     }
 
     protected void onStart() {
@@ -128,6 +128,7 @@ public class ContactMapActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -192,10 +193,13 @@ public class ContactMapActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void startLocationUpdates() {
-        if ( Build.VERSION.SDK_INT >= 23 && ContextCompat.checkSelfPermission(getBaseContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+        if ( Build.VERSION.SDK_INT >= 23 &&
+                ContextCompat.checkSelfPermission(getBaseContext(),
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED &&
                 ContextCompat.checkSelfPermission( getBaseContext(),
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             return  ;
         }
 
@@ -226,7 +230,6 @@ public class ContactMapActivity extends AppCompatActivity implements OnMapReadyC
 
         Point size = new Point();
         WindowManager w = getWindowManager();
-
         w.getDefaultDisplay().getSize(size);
         int measuredWidth = size.x;
         int measuredHeight = size.y;
@@ -363,7 +366,8 @@ public class ContactMapActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public void onLocationChanged(Location location) {
-        Toast.makeText(getBaseContext(), "Lat: "+location.getLatitude()+ " Long: "+location.getLongitude()+" Accuracy:  "+ location.getAccuracy(), Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "Lat: "+ location.getLatitude() +
+                " Long: "+ location.getLongitude() + " Accuracy:  " + location.getAccuracy(), Toast.LENGTH_LONG).show();
     }
 
     private SensorEventListener mySensorEventListener = new SensorEventListener() {
